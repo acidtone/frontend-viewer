@@ -3,32 +3,43 @@ const body = document.querySelector('body');
 const modes = document.querySelector('#mode-list');
 const aside = document.querySelector('aside');
 
-const hue = document.querySelector('#hue');
-const sat = document.querySelector('#sat');
-const lum = document.querySelector('#lum');
-const alpha = document.querySelector('#alpha');
+let eventProperties = [
+  {
+    val: document.querySelector('#hue'),
+    out: document.querySelector('output[for=hue]'),
+    type: 'deg',
+    cssprop: '--hue'
+  },
+  {
+    val: document.querySelector('#sat'),
+    out: document.querySelector('output[for=sat]'),
+    type: '%',
+    cssprop: '--sat'
+  },
+  {
+    val: document.querySelector('#lum'),
+    out: document.querySelector('output[for=lum]'),
+    type: '%',
+    cssprop: '--lum'
+  },
+  {
+    val: document.querySelector('#alpha'),
+    out: document.querySelector('output[for=alpha]'),
+    type: '',
+    cssprop: '--alpha'
+  }
+];
 
-const hueOut = document.querySelector('output[for=hue]');
-const satOut = document.querySelector('output[for=sat]');
-const lumOut = document.querySelector('output[for=lum]');
-const alphaOut = document.querySelector('output[for=alpha]');
+function eventAdder(controlProperties) {
+  for(let {val, out, type, cssprop} of controlProperties) {
+    val.addEventListener('input', function(event) {
+      out.value = val.value + type;
+      root.style.setProperty(cssprop, out.value);
+    })
+  }
+}
 
-hue.addEventListener('input', function(event) {
-  hueOut.value = hue.value + 'deg';
-  root.style.setProperty("--hue",hue.value);
-})
-sat.addEventListener('input', function(event) {
-  satOut.value = sat.value + '%';
-  root.style.setProperty("--sat",sat.value + '%');
-})
-lum.addEventListener('input', function(event) {
-  lumOut.value = lum.value + '%';
-  root.style.setProperty("--lum",lum.value + '%');
-})
-alpha.addEventListener('input', function(event) {
-  alphaOut.value = alpha.value;
-  root.style.setProperty("--alpha",alpha.value);
-})
+eventAdder(eventProperties);
 
 modes.addEventListener('click', function(event){
   body.style.setProperty('--blend-mode', getComputedStyle(event.target).backgroundBlendMode);
